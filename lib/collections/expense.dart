@@ -7,7 +7,10 @@ part 'expense.g.dart';
 class Expense {
   Id id = Isar.autoIncrement;
 
+  @Index()
   late double amount;
+
+  @Index()
   late DateTime date;
 
   @Enumerated(EnumType.name)
@@ -17,10 +20,13 @@ class Expense {
 
   //receipts
 
-  Receipt? receipt;
+// a one to many relationship
+  final receipts = IsarLinks<Receipt>();
 
+  @Index(composite: [CompositeIndex('amount')])
   String? paymentMethod;
 
+  @Index(type: IndexType.value, caseSensitive: false)
   List<String>? description;
 }
 

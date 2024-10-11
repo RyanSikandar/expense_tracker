@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:routine_app/collections/budget.dart';
+import 'package:routine_app/collections/expense.dart';
+import 'package:routine_app/collections/income.dart';
+import 'package:routine_app/collections/receipt.dart';
 
 late Isar isar;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final dir = await getApplicationDocumentsDirectory();
   if (Isar.instanceNames.isEmpty) {
-    isar = await Isar.open([], //list of collections
+    isar = await Isar.open([
+      BudgetSchema,
+      ReceiptSchema,
+      IncomeSchema,
+      ExpenseSchema
+    ], //list of collections
         directory: dir.path,
         name: "expenseInstance");
   }

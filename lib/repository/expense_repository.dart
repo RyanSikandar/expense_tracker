@@ -235,11 +235,7 @@ class ExpenseRepository extends Adapter<Expense> {
   Future<List<Expense>> fullTextSearch(String searchText) async {
     return await isar.expenses
         .filter()
-        .descriptionElementEqualTo(searchText)
-        .or()
-        .descriptionElementStartsWith(searchText)
-        .or()
-        .descriptionElementEndsWith(searchText)
+        .descriptionElementContains(searchText)
         .findAll();
   }
 }

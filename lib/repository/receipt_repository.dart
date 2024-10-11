@@ -55,4 +55,37 @@ class ReceiptRepository extends Adapter<Receipt> {
         await isar.receipts.put(collection);
       }
     });
-  }}
+  }
+
+  Future<void> uploadReceipts(List<Receipt> receipts) async {
+    await isar.writeTxn(() async {
+      for (Receipt receipt in receipts) {
+        await isar.receipts.put(receipt);
+      }
+    });
+  }
+
+  Future<List<Receipt>> downloadReceipts() async {
+    int totalReceipts = await isar.receipts.where().count();
+
+    List<Receipt> all = [];
+    await isar.txn(() async {
+      for (int i = 1; i < totalReceipts; i++) {
+        final receipt = await isar.receipts.where().idEqualTo(i).findFirst();
+        if (receipt != null) {
+          all.add(receipt);
+        }
+      }
+    });
+
+    return all;
+  }
+
+  Future<void> clearGallery(List<Receipt> receipts) async {
+    await isar.writeTxn(() async {
+      for (int i = 0; i < receipts.length; i++) {
+        await isar.receipts.delete(receipts[i].id);
+      }
+    });
+  }
+}
